@@ -36,7 +36,7 @@ class MyWeather extends OpenWeatherMap {
         $this->checkTemp();
         $this->checkWind();
         $this->checkHumidity();
-        
+        $this->printScores();
     }
 
     function getWeathers(){
@@ -91,6 +91,17 @@ class MyWeather extends OpenWeatherMap {
         }
     }
 
+    function printScores(){
+        usort($this->mydata, function($a,$b){
+            $c = $b['scores'] - $a['scores'];
+            $c .= $b['humidity'] - $a['humidity'];
+            $c .= strcmp($a['wind'],$b['wind']);
+            return $c;
+        });
+
+        header('Content-Type: application/json');
+        echo json_encode($this->mydata, JSON_FORCE_OBJECT);
+    }
 
     
 }
