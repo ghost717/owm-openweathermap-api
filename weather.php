@@ -26,7 +26,7 @@ require_once __DIR__ . '/bootstrap.php';
 
 class MyWeather extends OpenWeatherMap {
 
-    function __construct($cityNames, $myApiKey) {
+    function __construct($myApiKey, $cityNames) {
         $httpRequestFactory = new RequestFactory();
         $httpClient = GuzzleAdapter::createWithConfig([]);
         $this->owm = new OpenWeatherMap($myApiKey, $httpClient, $httpRequestFactory);
@@ -106,7 +106,7 @@ class MyWeather extends OpenWeatherMap {
     
 }
   
-$weather = new MyWeather($_GET['city'], $myApiKey);
+$weather = new MyWeather($myApiKey, $_GET['city']);
 
 
 
