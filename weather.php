@@ -32,10 +32,14 @@ class MyWeather extends OpenWeatherMap {
         $this->owm = new OpenWeatherMap($myApiKey, $httpClient, $httpRequestFactory);
         
         $this->cityNames = explode(",",$cityNames);
-        $this->get_weather();
+        $this->getWeathers();
+        $this->checkTemp();
+        $this->checkWind();
+        $this->checkHumidity();
+        
     }
 
-    function get_weather(){
+    function getWeathers(){
         foreach ($this->cityNames as $key => $value) {
             $weather = $this->owm->getWeather($value, 'metric', 'pl');
 
@@ -47,6 +51,46 @@ class MyWeather extends OpenWeatherMap {
             $this->mydata[$key]['time'] = $weather->lastUpdate->format('Y-m-d H:i:s');
         }
     }
+
+    function checkTemp(){
+        usort($this->mydata, function($a,$b){
+            $c = $b['temp'] - $a['temp'];
+            $c .= $b['wind'] - $a['wind'];
+            $c .= strcmp($a['humidity'],$b['humidity']);
+            return $c;
+        });
+
+        foreach ($this->mydata as $key => $value) {
+            $this->mydata[$key]['scores'] += (100 - 10 * (($key + 1) - 1)) * 0.6;
+        }
+    }
+
+    function checkWind(){
+        usort($this->mydata, function($a,$b){
+            $c = $b['wind'] - $a['wind'];
+            $c .= $b['temp'] - $a['temp'];
+            $c .= strcmp($a['humidity'],$b['humidity']);
+            return $c;
+        });
+
+        foreach ($this->mydata as $key => $value) {
+            $this->mydata[$key]['scores'] += (100 - 10 * (($key + 1) - 1)) * 0.3;
+        }
+    }
+
+    function checkHumidity(){
+        usort($this->mydata, function($a,$b){
+            $c = $b['humidity'] - $a['humidity'];
+            $c .= $b['wind'] - $a['wind'];
+            $c .= strcmp($a['temp'],$b['temp']);
+            return $c;
+        });
+
+        foreach ($this->mydata as $key => $value) {
+            $this->mydata[$key]['scores'] += (100 - 10 * (($key + 1) - 1)) * 0.1;
+        }
+    }
+
 
     
 }
