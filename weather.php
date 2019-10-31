@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 /*
  * OpenWeatherMap-PHP-API — A PHP API to parse weather data from https://OpenWeatherMap.org.
  *
@@ -22,6 +23,20 @@ use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
 require './vendor/autoload.php';
 require_once __DIR__ . '/bootstrap.php';
+
+class MyWeather extends OpenWeatherMap {
+    
+    function __construct($cityNames, $myApiKey) {
+        $httpRequestFactory = new RequestFactory();
+        $httpClient = GuzzleAdapter::createWithConfig([]);
+        $this->owm = new OpenWeatherMap($myApiKey, $httpClient, $httpRequestFactory);
+        
+        $this->cityNames = explode(",",$cityNames);
+    }
+
+}
+  
+$weather = new MyWeather($_GET['city'], $myApiKey);
 
 
 
