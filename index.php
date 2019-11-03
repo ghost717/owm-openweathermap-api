@@ -5,11 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>OpenWeatherMap App</title>
+    <style>
+        .wrap{
+            max-width: 320px;
+            margin: 20px auto;
+        }
+        .wrap form{
+            display: block;
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
-    <form action="weather.php" method="GET">
-        Podaj miasto: <input type="text" name="city"/><br/>
-        <input type=submit value="Wyślij"/>
-    </form>
+    <div class="wrap">
+        <form action="weather.php" method="GET">
+            <p class="name">
+                Podaj miasto: <input type="text" name="city"/>
+            </p>
+            <p class="submit">
+                <input type=submit value="Wyślij"/>
+            </p>
+        </form>
+    </div>
 </body>
 </html>

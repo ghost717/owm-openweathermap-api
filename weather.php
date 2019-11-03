@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+// error_reporting(0);
 /*
  * OpenWeatherMap-PHP-API — A PHP API to parse weather data from https://OpenWeatherMap.org.
  *
@@ -47,7 +47,7 @@ class MyWeather extends OpenWeatherMap {
             $this->mydata[$key]['temp'] = $weather->temperature->getValue();
             $this->mydata[$key]['humidity'] = $weather->humidity->getValue();
             $this->mydata[$key]['wind'] = $weather->wind->speed->getValue();
-            $this->mydata[$key]['scores'] = 0;
+            $this->mydata[$key]['score'] = 0;
             $this->mydata[$key]['time'] = $weather->lastUpdate->format('Y-m-d H:i:s');
         }
     }
@@ -61,7 +61,7 @@ class MyWeather extends OpenWeatherMap {
         });
 
         foreach ($this->mydata as $key => $value) {
-            $this->mydata[$key]['scores'] += (100 - 10 * (($key + 1) - 1)) * 0.6;
+            $this->mydata[$key]['score'] += (100 - 10 * (($key + 1) - 1)) * 0.6;
         }
     }
 
@@ -74,7 +74,7 @@ class MyWeather extends OpenWeatherMap {
         });
 
         foreach ($this->mydata as $key => $value) {
-            $this->mydata[$key]['scores'] += (100 - 10 * (($key + 1) - 1)) * 0.3;
+            $this->mydata[$key]['score'] += (100 - 10 * (($key + 1) - 1)) * 0.3;
         }
     }
 
@@ -87,13 +87,13 @@ class MyWeather extends OpenWeatherMap {
         });
 
         foreach ($this->mydata as $key => $value) {
-            $this->mydata[$key]['scores'] += (100 - 10 * (($key + 1) - 1)) * 0.1;
+            $this->mydata[$key]['score'] += (100 - 10 * (($key + 1) - 1)) * 0.1;
         }
     }
 
     function printScores(){
         usort($this->mydata, function($a,$b){
-            $c = $b['scores'] - $a['scores'];
+            $c = $b['score'] - $a['score'];
             $c .= $b['humidity'] - $a['humidity'];
             $c .= strcmp($a['wind'],$b['wind']);
             return $c;
@@ -102,8 +102,6 @@ class MyWeather extends OpenWeatherMap {
         header('Content-Type: application/json');
         echo json_encode($this->mydata, JSON_FORCE_OBJECT);
     }
-
-    
 }
   
 $weather = new MyWeather($myApiKey, $_GET['city']);
