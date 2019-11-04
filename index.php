@@ -15,13 +15,12 @@
                 margin: auto;
             }
         </style>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     </head>
     <body>
         <div class="wrap">
             <form action="weather.php" method="GET">
                 <p class="name">
-                    Podaj miasto: <input type="text" name="city"/>
+                    Podaj miasta: <input type="text" name="city" placeholder="Example 'city1,city2'" />
                 </p>
                 <p class="submit">
                     <input type=submit value="Wyślij"/>
@@ -29,24 +28,5 @@
             </form>
         </div>
 
-        <script>
-            jQuery(document).ready(function ($) {
-                $(document).on('submit','form',function(event){
-                    event.preventDefault();
-                    let input = $('input[name="city"]').val();
-                    let send = 0;
-
-                    // console.log(input);
-                    input = input.split(',');
-                    if(input.length > 1 && input.length < 5){
-                        // console.log(1);
-                        return true;
-                    } else {
-                        // console.log(input.length);
-                        return false;
-                    }
-                });
-            });
-        </script>
     </body>
 </html>

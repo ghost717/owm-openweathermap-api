@@ -31,24 +31,40 @@ class MyWeather extends OpenWeatherMap {
         $httpClient = GuzzleAdapter::createWithConfig([]);
         $this->owm = new OpenWeatherMap($myApiKey, $httpClient, $httpRequestFactory);
         
-        $this->cityNames = explode(",",$cityNames);
+        $this->cityNames = $cityNames;
         $this->getWeathers();
-        $this->checkTemp();
-        $this->checkWind();
-        $this->checkHumidity();
-        $this->printScores();
+        // $this->checkTemp();
+        // $this->checkWind();
+        // $this->checkHumidity();
+        // $this->sortScores();
+        // $this->printScores();
     }
 
     function getWeathers(){
-        foreach ($this->cityNames as $key => $value) {
-            $weather = $this->owm->getWeather($value, 'metric', 'pl');
+        $this->cityNames = explode(",",$this->cityNames);
+        
+        if(count($this->cityNames) > 1 && count($this->cityNames) < 5){
+            foreach ($this->cityNames as $key => $value) {
+                $weather = $this->owm->getWeather($value, 'metric', 'pl');
+    
+                $this->mydata[$key]['name'] = trim($value);
+                $this->mydata[$key]['temp'] = $weather->temperature->getValue();
+                $this->mydata[$key]['humidity'] = $weather->humidity->getValue();
+                $this->mydata[$key]['wind'] = $weather->wind->speed->getValue();
+                $this->mydata[$key]['score'] = 0;
+                $this->mydata[$key]['time'] = $weather->lastUpdate->format('Y-m-d H:i:s');
+            }
 
-            $this->mydata[$key]['name'] = trim($value);
-            $this->mydata[$key]['temp'] = $weather->temperature->getValue();
-            $this->mydata[$key]['humidity'] = $weather->humidity->getValue();
-            $this->mydata[$key]['wind'] = $weather->wind->speed->getValue();
-            $this->mydata[$key]['score'] = 0;
-            $this->mydata[$key]['time'] = $weather->lastUpdate->format('Y-m-d H:i:s');
+            $this->checkTemp();
+            $this->checkWind();
+            $this->checkHumidity();
+            $this->sortScores();
+            $this->printScores();
+
+        } else {
+            $this->mydata = 'Zła ilość danych. Podaj zakres 2-4 wartości oddzielonych przecinkiem';
+            
+            $this->printScores();
         }
     }
 
@@ -91,14 +107,16 @@ class MyWeather extends OpenWeatherMap {
         }
     }
 
-    function printScores(){
+    function sortScores(){
         usort($this->mydata, function($a,$b){
             $c = $b['score'] - $a['score'];
             $c .= $b['humidity'] - $a['humidity'];
             $c .= strcmp($a['wind'],$b['wind']);
             return $c;
         });
+    }
 
+    function printScores(){
         header('Content-Type: application/json');
         echo json_encode($this->mydata, JSON_FORCE_OBJECT);
     }
