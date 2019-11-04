@@ -62,7 +62,7 @@ class MyWeather extends OpenWeatherMap {
             $this->printScores();
 
         } else {
-            $this->mydata = 'Zła ilość danych. Podaj zakres 2-4 wartości oddzielonych przecinkiem';
+            $this->mydata = 'Zle dane. Podaj zakres 2-4 wartosci oddzielonych przecinkiem';
             
             $this->printScores();
         }
